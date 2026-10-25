@@ -1,0 +1,11 @@
+**
+!src/
+!src/**
+!knowledge/
+!knowledge/index.json
+!Dockerfile.online
+!deploy/
+!deploy/**
+**/__pycache__/
+**/*.pyc
+deploy/.env

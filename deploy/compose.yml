@@ -1,0 +1,30 @@
+services:
+  workbench:
+    build:
+      context: ..
+      dockerfile: Dockerfile.online
+    environment:
+      PUBLIC_URL: https://${WORKBENCH_DOMAIN}
+      ONLINE_ACCESS_CODE: ${ONLINE_ACCESS_CODE:?Set a strong access code}
+    read_only: true
+    tmpfs:
+      - /app/runtime:size=256m,uid=10001,gid=10001,mode=0700
+      - /tmp:size=64m,uid=10001,gid=10001,mode=0700
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    pids_limit: 128
+    restart: unless-stopped
+  https:
+    image: caddy:2
+    environment:
+      WORKBENCH_DOMAIN: ${WORKBENCH_DOMAIN}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    restart: unless-stopped
+volumes:
+  caddy_data:
+  caddy_config:

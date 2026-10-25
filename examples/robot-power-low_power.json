@@ -1,0 +1,87 @@
+{
+  "candidate_id": "LOW_POWER",
+  "model": {
+    "analyst": "Codex 外部分析者：工况与整机功率为设计假设，非实测",
+    "scope": "纸盒机器人48小时监听的初步功耗预算；电池未采购，主控与舵机功耗未实测，不能据此认证整机或比较确定优劣",
+    "schedule_basis": "典型每48小时识别60秒、动作150秒；保守识别120秒、动作300秒。每天十几次动作来自需求，单次时长与识别时长为分析假设；监听状态填补剩余时间。",
+    "power_boundary": "whole_load_bus",
+    "target_hours": 48,
+    "reserve_fraction": 0.2,
+    "battery": {
+      "voltage_v": {
+        "typical": 3.7,
+        "conservative": 3.6
+      },
+      "capacity_mah": {
+        "typical": 2000,
+        "conservative": 1800
+      },
+      "usable_fraction": {
+        "typical": 0.85,
+        "conservative": 0.7
+      },
+      "basis": "暂用单节锂电池2000mAh等级作容量情景；保守按1800mAh及70%可用容量折减，再保留20%储备。不是已选定电池规格或测量。"
+    },
+    "conversion_efficiency": {
+      "typical": 0.9,
+      "conservative": 0.8
+    },
+    "battery_overhead_mw": {
+      "typical": 2,
+      "conservative": 5
+    },
+    "states": [
+      {
+        "name": "持续监听（舵机断电）",
+        "duration_s": {
+          "typical": "remaining",
+          "conservative": "remaining"
+        },
+        "load_mw": {
+          "typical": 60,
+          "conservative": 120
+        },
+        "source_type": "assumption",
+        "basis": "整机常开负载的设计功率预算，包含语音、主控、开关等。手册只提供模块参考，不能直接当作整机值；精简路线尚未证明可编程。",
+        "sources": [
+          {
+            "document_id": "DOC-87895341aa649fb3",
+            "page": 6,
+            "quote": "平均工作电流： 3.0mA"
+          }
+        ]
+      },
+      {
+        "name": "识别与处理（含监听负载）",
+        "duration_s": {
+          "typical": 60,
+          "conservative": 120
+        },
+        "load_mw": {
+          "typical": 200,
+          "conservative": 400
+        },
+        "source_type": "assumption",
+        "basis": "整机识别期间全部负载的预留预算；缺少实际固件和识别周期测量。"
+      },
+      {
+        "name": "动作执行（含语音与主控）",
+        "duration_s": {
+          "typical": 150,
+          "conservative": 300
+        },
+        "load_mw": {
+          "typical": 1500,
+          "conservative": 4500
+        },
+        "source_type": "assumption",
+        "basis": "三舵机动作期间整机平均功率的宽范围假设，不是SG90标称值；力矩、同时动作和堵转行为待验证。"
+      }
+    ],
+    "peak": {
+      "load_peak_ma": null,
+      "supply_limit_ma": null,
+      "basis": "舵机5V轨启动和堵转峰值、电源模块限流及电池放电能力尚未知；平均功率预算不能替代峰值供电检查。"
+    }
+  }
+}

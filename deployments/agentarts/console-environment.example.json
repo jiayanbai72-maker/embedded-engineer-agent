@@ -1,0 +1,12 @@
+{
+  "CLOUD_PORT": "8080",
+  "CLOUD_TRUST_GATEWAY": "1",
+  "CLOUD_STATE_DIR": "/home/session/embedded-engineer",
+  "CLOUD_STORAGE_MOUNT": "/home/session",
+  "CLOUD_MODEL_ENDPOINT": "",
+  "CLOUD_MODEL_NAME": "",
+  "CLOUD_MODEL_API_KEY": "",
+  "CLOUD_MODEL_AUTH_HEADER": "Authorization",
+  "CLOUD_MODEL_AUTH_PREFIX": "Bearer",
+  "CLOUD_MODEL_JSON_MODE": "1"
+}

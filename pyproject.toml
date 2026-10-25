@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "embedded-engineer-agent"
+version = "0.1.0"
+description = "Platform-independent embedded engineering workflow skeleton"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+hardware = ["pyserial==3.5"]
+
+[project.scripts]
+embedded-agent = "embedded_agent.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+embedded_agent = ["web/*.html", "web/*.js", "web/*.css"]

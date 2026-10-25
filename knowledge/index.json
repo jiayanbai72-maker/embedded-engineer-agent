@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "cards": [
+    {
+      "id": "GEN-REQ-001",
+      "title": "把语言需求转成工程约束",
+      "category": "requirements",
+      "scope": "general",
+      "applies_to": [
+        "嵌入式项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "需求分析先记录目标用户、使用环境、输入输出、响应时间、精度、功耗、供电、预算、通信、尺寸与交付范围。区分用户确认的要求、设计假设和未知项。每项需求分配编号，并给出可观察的验收方法。已有材料作为约束，不直接决定最终设计；指标不足时先提出影响方案的关键问题。",
+      "content_sha256": "684dedfe1d9da3ba54f9275bc41bcda72f1131edb7005c6e211f1b8d34d9d71d"
+    },
+    {
+      "id": "GEN-ARCH-001",
+      "title": "比较方案并定义模块接口",
+      "category": "architecture",
+      "scope": "general",
+      "applies_to": [
+        "嵌入式项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "把功能分为采集、控制、交互、通信、存储与供电等模块。根据需求比较候选架构的资源、开发复杂度和风险，记录取舍。定义数据流、控制流、接口参数、单位、有效性、超时和错误行为。是否采用裸机循环、事件驱动或 RTOS 应根据并发、实时性和维护需求判断，不固定选择某一芯片或操作系统。",
+      "content_sha256": "516e2ed8b49593d4dc099b91243e2a5de2c75f0717b298cce8b450dfcfd95e14"
+    },
+    {
+      "id": "GEN-HW-001",
+      "title": "器件选型与电气兼容性检查",
+      "category": "hardware",
+      "scope": "general",
+      "applies_to": [
+        "含硬件接口的项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "选型记录功能、接口、资源需求和环境约束。检查供电范围、逻辑电平、输入阈值、驱动能力、峰值电流与模块外围电路。区分绝对最大额定值和推荐工作条件，区分芯片、模组与开发板。不能由名称相近推断兼容。UART 核对电平、波特率、帧格式和接线；I2C 核对地址、上拉、速度与总线条件；SPI 核对模式、时序、片选与电平。具体数值须取自匹配型号的数据手册。",
+      "content_sha256": "b5cda2350406888d43375bd861b878304dc7332e490549ee93087667b4b2bbc9"
+    },
+    {
+      "id": "GEN-CON-001",
+      "title": "并发与实时性设计检查",
+      "category": "concurrency",
+      "scope": "general",
+      "applies_to": [
+        "含中断或并发的项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "记录周期、截止时间、阻塞时间、共享状态和事件来源。中断中只做受约束的必要工作，耗时处理转移到主循环或任务。检查可重入性、同步、优先级、队列容量、栈和事件丢失行为。volatile 不提供互斥或通用原子性；具体临界区和 ISR API 依据平台实现核对。RTOS 并非所有项目的必要条件。",
+      "content_sha256": "a30f65951f05d63531464df6cf2fb13249c8f89e43928f868d56a39ee5b64be1"
+    },
+    {
+      "id": "GEN-BUILD-001",
+      "title": "建立可复现构建证据",
+      "category": "build",
+      "scope": "general",
+      "applies_to": [
+        "生成固件的项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "构建记录源码版本、目标板型、编译器、SDK、依赖、编译选项、链接配置、执行命令、退出状态和日志。保存固件与符号文件哈希。附带旧二进制不能证明当前源码已成功构建；编译通过不能证明实机运行。工具链选择依据项目约束，禁止把某一 IDE 设为所有项目的默认前提。",
+      "content_sha256": "769b17031748630d1a81a1a9ba4fabedb98495c488d19353a479e58e58e7cfc6"
+    },
+    {
+      "id": "GEN-DBG-001",
+      "title": "用证据驱动调试闭环",
+      "category": "debugging",
+      "scope": "general",
+      "applies_to": [
+        "嵌入式故障排查"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "先收集完整现象、复现步骤、环境、源码和日志，再列出有证据的假设。每次选择能区分原因的检查，优先最小修改；修复后重复原失败测试并检查相关回归。崩溃地址解析必须使用匹配固件的符号文件。记录未排除原因与自动修复上限，日志不足时不得直接宣布根因。",
+      "content_sha256": "4f463d02a2d45edecb811c1727a38b054deaf480b9abbb5693759da0184a2388"
+    },
+    {
+      "id": "GEN-TEST-001",
+      "title": "按需求分层验证",
+      "category": "testing",
+      "scope": "general",
+      "applies_to": [
+        "嵌入式项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "将测试关联到需求编号，分别记录静态检查、主机单元测试、集成测试、仿真和实机测试。覆盖正常、异常、边界、断连恢复和稳定性场景。替身与仿真结果不代表真实电气兼容性或测量精度。记录预期、实际、环境、源码与固件版本和证据；修改后重新评估哪些测试结果失效。",
+      "content_sha256": "64556546207450ad592e13b7dfdac7af33faac5e430c9940399c226fcd0ea853"
+    },
+    {
+      "id": "GEN-DEL-001",
+      "title": "交付与变更影响管理",
+      "category": "delivery",
+      "scope": "general",
+      "applies_to": [
+        "嵌入式项目"
+      ],
+      "source_kind": "authored_method",
+      "source_url": null,
+      "source_section": null,
+      "version": "方法卡片 v0.1",
+      "reviewed_at": "2026-10-14",
+      "content": "交付需求、方案依据、材料、接线、源码、环境、构建产物、配置样例、测试和操作说明。明示已验证、未执行与已知限制，保留来源声明，不打包凭据。器件或需求变化时，分析供电、接口、引脚、驱动、协议、测试和文档的影响并同步更新。",
+      "content_sha256": "67fdeda78d4c535a4c41e99725f6730240ecc7f23fe2f0f7a1a420722babaebc"
+    },
+    {
+      "id": "REF-CMSIS-001",
+      "title": "CMSIS 的适用范围",
+      "category": "architecture",
+      "scope": "ecosystem",
+      "applies_to": [
+        "支持相应 CMSIS 组件的 Arm 平台"
+      ],
+      "source_kind": "official_summary",
+      "source_url": "https://arm-software.github.io/CMSIS_5/General/html/index.html",
+      "source_section": "Introduction / CMSIS Components",
+      "version": "CMSIS 5.9.0 参考页，非最新版本声明",
+      "reviewed_at": "2026-10-14",
+      "content": "CMSIS 提供 Arm 生态中的公共接口与组件，涉及内核、驱动、RTOS 接口及软件包。它有助于接口一致性和组件复用。具体组件具有处理器适用范围，不能将其视为所有架构的统一实现或全部外设兼容性的证明。",
+      "content_sha256": "bbc220ad9ea4ce43cef0da81cecabddc2e1ba3aa1c4595f00299e979d02fc50b"
+    },
+    {
+      "id": "REF-CMAKE-001",
+      "title": "交叉编译工具链参考",
+      "category": "build",
+      "scope": "ecosystem",
+      "applies_to": [
+        "采用 CMake 的项目"
+      ],
+      "source_kind": "official_summary",
+      "source_url": "https://cmake.org/cmake/help/latest/manual/cmake-toolchains.7.html",
+      "source_section": "Introduction / Cross Compiling",
+      "version": "latest 动态文档，使用时匹配本地 CMake 版本",
+      "reviewed_at": "2026-10-14",
+      "content": "CMake 工具链配置用于描述构建所用编译器与目标环境。交叉编译需要区分主机和目标平台，并核对目标系统、工具链和查找路径。该资料适用于采用 CMake 的项目，不要求其他构建系统迁移到 CMake。",
+      "content_sha256": "64902080c18fefd3323e7106b1cc818395d1318eeccd57dd3a4dead0ff94670e"
+    },
+    {
+      "id": "REF-ZTEST-001",
+      "title": "Zephyr 测试框架参考",
+      "category": "testing",
+      "scope": "ecosystem",
+      "applies_to": [
+        "Zephyr 项目"
+      ],
+      "source_kind": "official_summary",
+      "source_url": "https://docs.zephyrproject.org/latest/develop/test/ztest.html",
+      "source_section": "Test Framework",
+      "version": "latest 动态文档，使用时匹配 Zephyr 版本",
+      "reviewed_at": "2026-10-14",
+      "content": "Zephyr 的 Ztest 提供断言与测试组织能力，可用于模块单元测试和集成测试。相关场景可通过 Twister 组织构建与执行。测试是否在主机、仿真或真实设备运行须分别记录，不把构建成功当成硬件测试通过。",
+      "content_sha256": "874e5e9de72f75b343825ed318cc235132c3310ea9b91d6be7d7ca13f7c22d43"
+    }
+  ]
+}

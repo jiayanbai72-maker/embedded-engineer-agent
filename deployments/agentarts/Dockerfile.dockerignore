@@ -1,0 +1,15 @@
+**
+!src/
+!src/**
+!deployments/
+!deployments/**
+!knowledge/
+!knowledge/**
+!docs/
+!docs/**
+**/__pycache__
+**/*.pyc
+**/.env
+**/runtime
+**/.git
+**/*local-config*.json

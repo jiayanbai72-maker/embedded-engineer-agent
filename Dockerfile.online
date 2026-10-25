@@ -1,0 +1,10 @@
+FROM python:3.12-slim
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=/app/src
+WORKDIR /app
+# Deliberately exclude runtime, credentials, personal projects and vendor files.
+COPY src/ /app/src/
+COPY knowledge/index.json /app/knowledge/index.json
+RUN mkdir -p /app/runtime && chown -R 10001:10001 /app/runtime
+USER 10001:10001
+EXPOSE 8080
+CMD ["python", "-m", "embedded_agent.online_gateway", "--host", "0.0.0.0", "--port", "8080"]

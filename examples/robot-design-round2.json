@@ -1,0 +1,319 @@
+{
+  "plan": {
+    "analyst": "Codex 外部分析者（本次人工组织分析，无自主模型）",
+    "scope": "纸盒机器人：100元总采购、48小时监听、3路PWM的初步比较；不覆盖实机、语音成功率、机构与完整电气验收",
+    "rationale": "上一轮工具计算表明，在1W监听、假设2000mAh电池的情景下能量需求远超可用能量，故研究减少常开组件的路线；阅读SU21T物理6、7页后提出内核复用备选。不能据此判定原路线实际失败或新路线达标，需补编程、PWM、功耗和采购证据。",
+    "objectives": [
+      {
+        "id": "COST",
+        "description": "全部新购物料、供电、结构和运费不超过100元",
+        "kind": "budget",
+        "requirement_ids": [
+          "REQ-5"
+        ],
+        "fixed_inputs": {
+          "limit_cny": 100
+        }
+      },
+      {
+        "id": "RUNTIME",
+        "description": "连续48小时保持语音监听",
+        "kind": "energy",
+        "requirement_ids": [
+          "REQ-4",
+          "REQ-7"
+        ],
+        "fixed_inputs": {
+          "hours": 48
+        }
+      },
+      {
+        "id": "CONTROL",
+        "description": "本轮三轴机构设计需要3路PWM；不证明引脚复用可同时实现",
+        "kind": "resource",
+        "requirement_ids": [
+          "REQ-1",
+          "REQ-2"
+        ],
+        "fixed_inputs": {
+          "resource": "PWM",
+          "required": 3
+        }
+      }
+    ],
+    "candidates": [
+      {
+        "id": "LOW_POWER",
+        "name": "低功耗语音模块＋独立低功耗主控",
+        "architecture": "离线语音模块 → 串口命令 → 主控动作状态机 → 3路舵机；动作结束后切断舵机电源；电池与稳压待定",
+        "covers": [
+          "REQ-1",
+          "REQ-2",
+          "REQ-3",
+          "REQ-4",
+          "REQ-5",
+          "REQ-6",
+          "REQ-7"
+        ],
+        "components": [
+          {
+            "role": "语音识别",
+            "model": "SU21T"
+          },
+          {
+            "role": "动作控制",
+            "model": "STM32L031K6"
+          },
+          {
+            "role": "执行机构",
+            "model": "SG90 × 3（待供应商核验）"
+          },
+          {
+            "role": "电池、稳压、保护与断电开关",
+            "model": null
+          }
+        ],
+        "tradeoffs": [
+          "独立主控便于限制动作和控制断电，但增加成本与待机负担"
+        ],
+        "risks": [
+          "没有实际BOM报价，100元约束未证明",
+          "整机监听及动作功耗未测量",
+          "三个PWM的引脚复用、舵机力矩、堵转电流和机构边界未验证"
+        ],
+        "assumptions": [
+          "三自由度是当前设计分解：摇头、点头、单臂招手；具体机构仍需验证",
+          "每48小时累计动作150秒只是演算工况，不是用户确认的验收上限",
+          "所有电源和功耗事实保持未知，不能用芯片休眠电流代替整机监听功耗"
+        ],
+        "proposal": {
+          "checks": [
+            {
+              "id": "TOTAL",
+              "objective_id": "COST",
+              "kind": "budget",
+              "inputs": {
+                "limit_cny": 100,
+                "shipping_cny": null,
+                "coverage_complete": false,
+                "parts": [
+                  {
+                    "model": "SU21T",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "STM32L031K6",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "SG90（实际供应商与批次待定）",
+                    "quantity": 3,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "电池与保护充电方案待定",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "稳压与舵机断电开关待定",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "结构、线材与连接件待定",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  }
+                ]
+              }
+            },
+            {
+              "id": "LISTEN48",
+              "objective_id": "RUNTIME",
+              "kind": "energy",
+              "inputs": {
+                "battery_v": null,
+                "capacity_mah": null,
+                "usable_fraction": null,
+                "reserve_fraction": 0.2,
+                "hours": 48,
+                "idle_mw": null,
+                "active_mw": null,
+                "active_seconds": 150
+              }
+            },
+            {
+              "id": "AXES",
+              "objective_id": "CONTROL",
+              "kind": "resource",
+              "inputs": {
+                "resource": "PWM",
+                "available": null,
+                "required": 3
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": "DEV_BOARD",
+        "name": "集成语音主控的精简备选（开发与三路PWM待验证）",
+        "architecture": "探索由SU21T内部主控完成离线识别和动作控制，外接3路舵机及断电开关；若固件开发或PWM并发能力不足，放弃直控路线，采用独立主控",
+        "covers": [
+          "REQ-1",
+          "REQ-2",
+          "REQ-3",
+          "REQ-4",
+          "REQ-5",
+          "REQ-6",
+          "REQ-7"
+        ],
+        "components": [
+          {
+            "role": "语音识别",
+            "model": "SU21T"
+          },
+          {
+            "role": "动作控制：拟复用语音模组内部主控，编程能力待验证",
+            "model": null
+          },
+          {
+            "role": "执行机构",
+            "model": "SG90 × 3（待供应商核验）"
+          },
+          {
+            "role": "电池、稳压、保护与断电开关",
+            "model": null
+          }
+        ],
+        "tradeoffs": [
+          "有机会减少外部开发板的常开负担与BOM，但必须证明动作编程、三路PWM并发和安全限位均可实现；不能只依据复用引脚表推断"
+        ],
+        "risks": [
+          "没有支持三路舵机独立控制的固件证据",
+          "只有接口文档，未核对PWM并发、定时器资源和复用限制",
+          "全部采购价格、电池和整机功耗仍未知"
+        ],
+        "assumptions": [
+          "模块内部主控复用仅为待研究假设，并未验证可实现",
+          "第1轮1W监听和2000mAh电池是风险情景，不是SU03T实测；本轮取消该情景输入，未知值恢复为null",
+          "SU21T物理第6、7页列出接口及PWM复用，但这不足以审核三路PWM同时可用"
+        ],
+        "proposal": {
+          "checks": [
+            {
+              "id": "TOTAL",
+              "objective_id": "COST",
+              "kind": "budget",
+              "inputs": {
+                "limit_cny": 100,
+                "shipping_cny": null,
+                "coverage_complete": false,
+                "parts": [
+                  {
+                    "model": "SU21T",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "SG90（实际供应商与批次待定）",
+                    "quantity": 3,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "电池与保护充电方案待定",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "稳压与舵机断电开关待定",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  },
+                  {
+                    "model": "结构、线材与连接件待定",
+                    "quantity": 1,
+                    "unit_price_cny": null
+                  }
+                ]
+              }
+            },
+            {
+              "id": "LISTEN48",
+              "objective_id": "RUNTIME",
+              "kind": "energy",
+              "inputs": {
+                "battery_v": null,
+                "capacity_mah": null,
+                "usable_fraction": null,
+                "reserve_fraction": 0.2,
+                "hours": 48,
+                "idle_mw": null,
+                "active_mw": null,
+                "active_seconds": 150
+              }
+            },
+            {
+              "id": "AXES",
+              "objective_id": "CONTROL",
+              "kind": "resource",
+              "inputs": {
+                "resource": "PWM",
+                "available": null,
+                "required": 3
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "tasks": [
+      {
+        "id": "VOICE_PWM",
+        "question": "SU21T文档明确列出了哪些PWM接口？是否足以证明并发能力？",
+        "query": "SU21T PWM",
+        "why": "定位引脚页，区分复用功能与同时可用的独立通道数",
+        "candidate_ids": [
+          "LOW_POWER",
+          "DEV_BOARD"
+        ]
+      },
+      {
+        "id": "VOICE_UART",
+        "question": "独立主控与集成主控路线的通信接口条件是什么？",
+        "query": "SU21T UART",
+        "why": "独立MCU路线需要串口协议，直控路线需要固件开发能力；接口存在不等于应用固件已实现",
+        "candidate_ids": [
+          "LOW_POWER",
+          "DEV_BOARD"
+        ]
+      },
+      {
+        "id": "MCU_TIMERS",
+        "question": "备用主控有哪些定时器资料可供核验？",
+        "query": "STM32L031K6 timer",
+        "why": "保留可控的独立主控路线，后续仍需具体引脚映射",
+        "candidate_ids": [
+          "LOW_POWER"
+        ]
+      }
+    ],
+    "response_to": [
+      "E1.1:DEV_BOARD:LISTEN48",
+      "R1:VOICE_LOW"
+    ],
+    "changes": [
+      {
+        "candidate_id": "DEV_BOARD",
+        "reason": "根据能耗风险情景及已定位的SU21T接口文档，替换为集成动作控制的研究候选；移除外部开发板假设，恢复未知电池和功耗输入，保留100元、48小时及3路PWM约束。",
+        "observation_ids": [
+          "E1.1:DEV_BOARD:LISTEN48",
+          "R1:VOICE_LOW"
+        ]
+      }
+    ]
+  }
+}
