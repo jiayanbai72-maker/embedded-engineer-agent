@@ -11,6 +11,8 @@ dependencies = []
 
 [project.optional-dependencies]
 hardware = ["pyserial==3.5"]
+pdf = ["pypdf>=5,<7", "pdfplumber>=0.11,<0.12"]
+test = ["reportlab>=4,<5", "pypdf>=5,<7", "pdfplumber>=0.11,<0.12"]
 
 [project.scripts]
 embedded-agent = "embedded_agent.cli:main"

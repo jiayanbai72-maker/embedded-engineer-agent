@@ -12,8 +12,8 @@
     },
     {
       "path": ".github/workflows/tests.yml",
-      "bytes": 803,
-      "sha256": "1e1f2ddaf37806606861a6a0715fa416d46419f87b9e4ec0f46feb8513ede7b6"
+      "bytes": 819,
+      "sha256": "43b58a1cb672a2f725e9728c4a2b8428475feeaf4c877cbac85c653c11de2cc2"
     },
     {
       "path": ".gitignore",
@@ -22,8 +22,8 @@
     },
     {
       "path": "CONTRIBUTING.md",
-      "bytes": 1204,
-      "sha256": "0cf7d920dd9fa025a03ce5bb7cdfbaeadad2b44290a1e82af1c66ab0aea9610d"
+      "bytes": 1377,
+      "sha256": "3b6e89aba54994d1192dfcbb24f2ebb1eab450693aa8040b25f8695aa9dff387"
     },
     {
       "path": "deploy/.env.example",
@@ -367,8 +367,8 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 530,
-      "sha256": "430c19f270ccfef4c1da2f374fa231c00c59d5a1837467f2dd4f2492d82866da"
+      "bytes": 646,
+      "sha256": "1ae084fdcd9f759a35d3f20e1098a7ce61e6334c87db6416a36e39f2502761f5"
     },
     {
       "path": "README.md",
